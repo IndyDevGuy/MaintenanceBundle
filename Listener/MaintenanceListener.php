@@ -1,6 +1,6 @@
 <?php
 
-namespace IndyDevGuy\MaintenanceMode\Listener;
+namespace IndyDevGuy\MaintenanceBundle\Listener;
 
 use ErrorException;
 use IndyDevGuy\MaintenanceBundle\Drivers\DriverFactory;
