@@ -2,7 +2,7 @@
 
 namespace IndyDevGuy\MaintenanceBundle\Drivers;
 
-use Datetime;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Exception;
 use IndyDevGuy\MaintenanceBundle\Drivers\Query\DefaultQuery;
@@ -73,7 +73,7 @@ class DatabaseDriver extends AbstractDriver implements DriverTTLInterface
         try {
             $ttl = null;
             if (isset($this->options['ttl']) && $this->options['ttl'] !== 0) {
-                $now = new Datetime('now');
+                $now = new DateTime('now');
                 $ttl = $this->options['ttl'];
                 $ttl = $now->modify(sprintf('+%s seconds', $ttl))->format('Y-m-d H:i:s');
             }
@@ -104,7 +104,7 @@ class DatabaseDriver extends AbstractDriver implements DriverTTLInterface
     /**
      * @throws Exception
      */
-    public function getTtlDate(): ?Datetime
+    public function getTtlDate(): ?DateTime
     {
         $db = $this->pdoDriver->initDb();
         $data = $this->pdoDriver->selectQuery($db);
@@ -112,7 +112,7 @@ class DatabaseDriver extends AbstractDriver implements DriverTTLInterface
             return null;
         }
         if (null !== $data[0]['ttl']) {
-            return new Datetime($data[0]['ttl']);
+            return new DateTime($data[0]['ttl']);
         }
         return null;
     }
