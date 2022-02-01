@@ -102,6 +102,18 @@ class DatabaseDriver extends AbstractDriver implements DriverTTLInterface
     }
 
     /**
+     * @throws Exception
+     */
+    public function getTtlDate(): Datetime
+    {
+        $db = $this->pdoDriver->initDb();
+        $data = $this->pdoDriver->selectQuery($db);
+
+
+        return new Datetime($data[0]['ttl']);
+    }
+
+    /**
      * {@inheritdoc}
      * @throws Exception
      */
