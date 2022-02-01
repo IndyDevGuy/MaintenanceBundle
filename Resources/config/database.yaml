@@ -1,0 +1,12 @@
+parameters:
+  idg_maintenance.driver.database.class: IndyDevGuy\MaintenanceBundle\Drivers\DatabaseDriver
+
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: false
+
+  idg_maintenance.driver.database:
+    class: %idg_maintenance.driver.database.class%
+    public: false
+    arguments: ['@doctrine']

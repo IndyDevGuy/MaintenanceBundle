@@ -1,0 +1,53 @@
+parameters:
+  idg_maintenance.listener.class: IndyDevGuy\MaintenanceBundle\Listener\MaintenanceListener
+  idg_maintenance.driver_factory.class: IndyDevGuy\MaintenanceBundle\Drivers\DriverFactory
+
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: false
+
+  idg_maintenance.driver.factory:
+    class: %idg_maintenance.driver_factory.class%
+    public: true
+    arguments:
+      - '@idg_maintenance.driver.database'
+      - '@translator.default'
+      - %idg_maintenance.driver%
+
+  idg_maintenance.listener:
+    class: %idg_maintenance.listener.class%
+    tags:
+      - { name: kernel.event_listener, event: kernel.request }
+      - { name: kernel.event_listener, event: kernel.response }
+    arguments:
+      - '@idg_maintenance.driver.factory'
+      - %idg_maintenance.authorized.path%
+      - %idg_maintenance.authorized.host%
+      - %idg_maintenance.authorized.ips%
+      - %idg_maintenance.authorized.query%
+      - %idg_maintenance.authorized.cookie%
+      - %idg_maintenance.authorized.route%
+      - %idg_maintenance.authorized.attributes%
+      - %idg_maintenance.response.http_code%
+      - %idg_maintenance.response.http_status%
+      - %idg_maintenance.response.exception_message%
+      - %kernel.debug%
+
+  IndyDevGuy\MaintenanceBundle\Command\DriverLockCommand:
+    class: IndyDevGuy\MaintenanceBundle\Command\DriverLockCommand
+    public: true
+    tags:
+      - { name: kernel.command, command: idg_maintenance.driver.lock }
+    arguments:
+      - '@idg_maintenance.driver.factory'
+
+  IndyDevGuy\MaintenanceBundle\Command\DriverUnlockCommand:
+    class: IndyDevGuy\MaintenanceBundle\Command\DriverUnlockCommand
+    public: true
+    tags:
+      - { name: kernel.command, command: idg_maintenance.driver.unlock }
+    arguments:
+      - '@idg_maintenance.driver.factory'
+
+
