@@ -9,11 +9,15 @@ services:
 
   idg_maintenance.driver.factory:
     class: "%idg_maintenance.driver_factory.class%"
+    alias: idg_maintenance.driver.factory
     public: true
     arguments:
       - '@idg_maintenance.driver.database'
       - '@translator.default'
       - "%idg_maintenance.driver%"
+
+  '%idg_maintenance.driver_factory.class%':
+    alias: idg_maintenance.driver.factory
 
   idg_maintenance.listener:
     class: "%idg_maintenance.listener.class%"
