@@ -7,6 +7,6 @@ services:
     autoconfigure: false
 
   idg_maintenance.driver.database:
-    class: %idg_maintenance.driver.database.class%
+    class: "%idg_maintenance.driver.database.class%"
     public: false
     arguments: ['@doctrine']
