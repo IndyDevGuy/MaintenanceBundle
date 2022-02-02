@@ -110,7 +110,7 @@ class MaintenanceListener
      * @param DriverFactory $driverFactory The driver factory
      * @param string|null $path A regex for the path
      * @param string|null $host A regex for the host
-     * @param array $roles
+     * @param array|null $roles
      * @param array|null $ips The list of IP addresses
      * @param array $query Query arguments
      * @param array $cookie Cookies
@@ -126,7 +126,7 @@ class MaintenanceListener
         DriverFactory $driverFactory,
         string $path = null,
         string $host = null,
-        array $roles = array(),
+        array $roles = null,
         array $ips = null,
         array $query = array(),
         array $cookie = array(),
