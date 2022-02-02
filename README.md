@@ -1,14 +1,15 @@
 OVERVIEW
 ========
 
-This bundle allows you to place your website in maintenance mode by calling two commands in your console. A page with status code 503 appears to users,
-it is possible to authorize certain ips addresses stored in your configuration
+This bundle allows you to place your website in maintenance mode.
 
-Several choices of maintenance mode are possible: a simple test of an existing file, or memcache, or in a database.
+A page with status code 503 appears to users, several ways to authorize via the configuration.
+
+Several choices of maintenance modes are possible: a simple test of an existing file, memcache, or in a database via Doctrine ORM.
 
 ---------------------
 
 Documentation
 =============
 
-For installation and how to use the bundle refer to [Resources/doc/index.md](https://github.com/IndyDevGuy/MaintenanceBundle/blob/master/Resources/doc/index.md)
+For installation and examples refer to [Resources/doc/index.md](https://github.com/IndyDevGuy/MaintenanceBundle/blob/master/Resources/doc/index.md)

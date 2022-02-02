@@ -16,6 +16,9 @@ use Symfony\Component\Console\Question\Question;
 
 class DriverLockCommand extends Command
 {
+    // the name of the command (the part after "bin/console")
+    protected static $defaultName = 'idg:maintenance:lock';
+    protected static $defaultDescription = 'Activates Maintenance Mode for a specified time (ttl).';
     protected ?int $ttl;
 
     private DriverFactory $driverFactory;
@@ -23,7 +26,7 @@ class DriverLockCommand extends Command
     public function __construct(DriverFactory $driverFactory)
     {
         $this->driverFactory = $driverFactory;
-        parent::__construct('idg:maintenance:driver:lock');
+        parent::__construct();
     }
 
     /**
@@ -32,17 +35,24 @@ class DriverLockCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('idg:maintenance:lock')
-            ->setDescription('Lock access to the site while maintenance...')
-            ->addArgument('ttl', InputArgument::OPTIONAL, 'Overwrite time to life from your configuration, doesn\'t work with file or shm driver. Time in seconds.')
+            // If you don't like using the $defaultDescription static property,
+            // you can also define the short description using this method:
+            // ->setDescription('...')
+
+            // the command help shown when running the command with the "--help" option
+            ->setHelp('Activates Maintenance Mode for a specified time (ttl).');
+        $this
+                ->setName($this::$defaultName)
+            ->setDescription($this::$defaultDescription)
+            ->addArgument('ttl', InputArgument::OPTIONAL, 'Overwrite time to life from the configuration, does not work with file or shm driver. Time is in seconds.')
             ->setHelp(<<<EOT
-    You can optionally set a time to life of the maintenance
-   <info>%command.full_name% 3600</info>
-    You can execute the lock without a warning message which you need to interact with:
-    <info>%command.full_name% --no-interaction</info>
-    Or
-    <info>%command.full_name% 3600 -n</info>
-EOT
+                You can optionally change the time to life from the configuration, does not work with file or shm driver. Time is in seconds.
+               <info>%command.full_name% 3600</info>
+                You can execute the lock without a warning message and interaction with:
+                <info>%command.full_name% --no-interaction</info>
+                Or
+                <info>%command.full_name% 3600 -n</info>
+            EOT
             );
     }
 
@@ -50,14 +60,14 @@ EOT
      * {@inheritdoc}
      * @throws ErrorException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $driver = $this->getDriver();
 
         if ($input->isInteractive()) {
             if (!$this->askConfirmation('WARNING! Are you sure you wish to continue? (y/n)', $input, $output)) {
                 $output->writeln('<error>Maintenance cancelled!</error>');
-                return;
+                return Command::SUCCESS;
             }
         } elseif (null !== $input->getArgument('ttl')) {
             $this->ttl = $input->getArgument('ttl');
@@ -71,6 +81,7 @@ EOT
         }
 
         $output->writeln('<info>'.$driver->getMessageLock($driver->lock()).'</info>');
+        return Command::SUCCESS;
     }
 
     /**

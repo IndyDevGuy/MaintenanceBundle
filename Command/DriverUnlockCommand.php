@@ -11,12 +11,14 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class DriverUnlockCommand extends Command
 {
+    protected static $defaultName = 'idg:maintenance:unlock';
+    protected static $defaultDescription = 'Disables Maintenance Mode.';
     private DriverFactory $driverFactory;
 
     public function __construct(DriverFactory $driverFactory)
     {
         $this->driverFactory = $driverFactory;
-        parent::__construct('idg:maintenance:driver:unlock');
+        parent::__construct();
     }
 
     /**
@@ -25,12 +27,12 @@ class DriverUnlockCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('idg:maintenance:unlock')
-            ->setDescription('Unlock access to the site while maintenance...')
+            ->setName(self::$defaultName)
+            ->setDescription(self::$defaultDescription)
             ->setHelp(<<<EOT
-    You can execute the unlock without a warning message which you need to interact with:
-    <info>%command.full_name% --no-interaction</info>
-EOT
+                You can disable maintenance mode without a warning message or interaction with:
+                <info>%command.full_name% --no-interaction</info>
+            EOT
             );
     }
 
@@ -38,10 +40,10 @@ EOT
      * {@inheritdoc}
      * @throws ErrorException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output):int
     {
         if (!$this->confirmUnlock($input, $output)) {
-            return;
+            return Command::SUCCESS;
         }
 
         $driver = $this->driverFactory->getDriver();
@@ -49,6 +51,7 @@ EOT
         $unlockMessage = $driver->getMessageUnlock($driver->unlock());
 
         $output->writeln('<info>'.$unlockMessage.'</info>');
+        return Command::SUCCESS;
     }
 
     /**
