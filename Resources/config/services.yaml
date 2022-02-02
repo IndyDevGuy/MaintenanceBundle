@@ -41,7 +41,7 @@ services:
     class: IndyDevGuy\MaintenanceBundle\Command\DriverLockCommand
     public: true
     tags:
-      - { name: kernel.command, command: idg_maintenance:lock }
+      - { name: kernel.command}
     arguments:
       - '@idg_maintenance.driver.factory'
 
@@ -49,7 +49,7 @@ services:
     class: IndyDevGuy\MaintenanceBundle\Command\DriverUnlockCommand
     public: true
     tags:
-      - { name: kernel.command, command: idg_maintenance:unlock }
+      - { name: kernel.command }
     arguments:
       - '@idg_maintenance.driver.factory'
 

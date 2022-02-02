@@ -19,6 +19,14 @@ class DriverLockCommand extends Command
     // the name of the command (the part after "bin/console")
     protected static $defaultName = 'idg_maintenance:lock';
     protected static $defaultDescription = 'Activates Maintenance Mode for a specified time (ttl).';
+    protected static string $defaultHelp = <<<EOT
+                You can optionally change the time to life from the configuration, does not work with file or shm driver. Time is in seconds.
+               <info>%command.full_name% 3600</info>
+                You can execute the lock without a warning message and interaction with:
+                <info>%command.full_name% --no-interaction</info>
+                Or
+                <info>%command.full_name% 3600 -n</info>
+            EOT;
     protected ?int $ttl;
 
     private DriverFactory $driverFactory;
@@ -35,25 +43,10 @@ class DriverLockCommand extends Command
     protected function configure()
     {
         $this
-            // If you don't like using the $defaultDescription static property,
-            // you can also define the short description using this method:
-            // ->setDescription('...')
-
-            // the command help shown when running the command with the "--help" option
-            ->setHelp('Activates Maintenance Mode for a specified time (ttl).');
-        $this
-                ->setName($this::$defaultName)
+            ->setName($this::$defaultName)
             ->setDescription($this::$defaultDescription)
             ->addArgument('ttl', InputArgument::OPTIONAL, 'Overwrite time to life from the configuration, does not work with file or shm driver. Time is in seconds.')
-            ->setHelp(<<<EOT
-                You can optionally change the time to life from the configuration, does not work with file or shm driver. Time is in seconds.
-               <info>%command.full_name% 3600</info>
-                You can execute the lock without a warning message and interaction with:
-                <info>%command.full_name% --no-interaction</info>
-                Or
-                <info>%command.full_name% 3600 -n</info>
-            EOT
-            );
+            ->setHelp($this::$defaultHelp);
     }
 
     /**
@@ -133,7 +126,7 @@ class DriverLockCommand extends Command
             }
 
             $ttl = (int) $ttl;
-            $this->ttl = $ttl ? $ttl : $input->getArgument('ttl');
+            $this->ttl = $ttl ?: $input->getArgument('ttl');
         } else {
             $output->writeln(array(
                 '',
