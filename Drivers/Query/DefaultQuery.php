@@ -3,6 +3,7 @@
 namespace IndyDevGuy\MaintenanceBundle\Drivers\Query;
 
 use Doctrine\DBAL\Exception;
+use PDO;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ObjectManager;
 
@@ -27,7 +28,7 @@ class DefaultQuery extends PdoQuery
     /**
      * {@inheritdoc}
      */
-    public function initDb()
+    public function initDb():PDO
     {
         if (null === $this->db) {
             $db = $this->em->getConnection();
