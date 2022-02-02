@@ -22,7 +22,7 @@ class DriverLockCommand extends Command
     protected static string $defaultHelp = <<<EOT
                 You can optionally change the time to life from the configuration, does not work with file or shm driver. Time is in seconds.
                <info>%command.full_name% 3600</info>
-                You can execute the lock without a warning message and interaction with:
+                You can enable maintenance mode without a warning message or interaction with:
                 <info>%command.full_name% --no-interaction</info>
                 Or
                 <info>%command.full_name% 3600 -n</info>
@@ -33,8 +33,8 @@ class DriverLockCommand extends Command
 
     public function __construct(DriverFactory $driverFactory)
     {
-        $this->driverFactory = $driverFactory;
         parent::__construct();
+        $this->driverFactory = $driverFactory;
     }
 
     /**

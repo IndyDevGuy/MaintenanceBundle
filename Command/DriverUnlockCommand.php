@@ -21,8 +21,8 @@ class DriverUnlockCommand extends Command
 
     public function __construct(DriverFactory $driverFactory)
     {
-        $this->driverFactory = $driverFactory;
         parent::__construct();
+        $this->driverFactory = $driverFactory;
     }
 
     /**
