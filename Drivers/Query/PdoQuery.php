@@ -9,10 +9,7 @@ use RuntimeException;
 
 abstract class PdoQuery
 {
-    /**
-     * @var PDO|null
-     */
-    protected ?PDO $db;
+    protected  $db;
 
     /**
      * @var array
