@@ -10,9 +10,9 @@ use RuntimeException;
 abstract class PdoQuery
 {
     /**
-     * @var PDO
+     * @var PDO|null
      */
-    protected PDO $db;
+    protected ?PDO $db;
 
     /**
      * @var array
@@ -27,6 +27,7 @@ abstract class PdoQuery
     public function __construct(array $options = array())
     {
         $this->options = $options;
+        $this->db = null;
     }
 
     /**
