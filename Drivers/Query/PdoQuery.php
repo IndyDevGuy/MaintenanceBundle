@@ -4,7 +4,6 @@ namespace IndyDevGuy\MaintenanceBundle\Drivers\Query;
 
 use Exception;
 use PDO;
-use PDOStatement;
 use RuntimeException;
 
 abstract class PdoQuery
@@ -24,7 +23,6 @@ abstract class PdoQuery
     public function __construct(array $options = array())
     {
         $this->options = $options;
-        $this->db = null;
     }
 
     /**
@@ -37,28 +35,28 @@ abstract class PdoQuery
     /**
      * Result of delete query
      *
-     * @param PDO $db PDO instance
+     * @param $db
      *
      * @return boolean
      */
-    abstract function deleteQuery(PDO $db):bool;
+    abstract function deleteQuery($db):bool;
 
     /**
      * Result of select query
      *
-     * @param PDO $db PDO instance
+     * @param $db
      *
      * @return array
      */
-    abstract function selectQuery(PDO $db): array;
+    abstract function selectQuery($db): array;
 
     /**
      * @param int $ttl
      * @param int $start
-     * @param PDO $db
+     * @param $db
      * @return bool
      */
-    abstract function insertQuery(int $ttl, int $start, PDO $db): bool;
+    abstract function insertQuery(int $ttl, int $start, $db): bool;
 
     /**
      * Initialize pdo connection
@@ -68,7 +66,7 @@ abstract class PdoQuery
     /**
      * Execute sql
      *
-     * @param PDO $db    PDO instance
+     * @param $db
      * @param string $query Query
      * @param array  $args  Arguments
      *
@@ -76,7 +74,7 @@ abstract class PdoQuery
      *
      * @throws RuntimeException
      */
-    protected function exec(PDO $db, string $query, array $args = array()): bool
+    protected function exec($db, string $query, array $args = array()): bool
     {
         $stmt = $this->prepareStatement($db, $query);
 
@@ -96,14 +94,13 @@ abstract class PdoQuery
     /**
      * PrepareStatement
      *
-     * @param PDO $db    PDO instance
+     * @param $db
      * @param string $query Query
      *
-     * @return PDOStatement
      *
-     * @throws RuntimeException
+     * @return mixed
      */
-    protected function prepareStatement(PDO $db, string $query): PDOStatement
+    protected function prepareStatement($db, string $query)
     {
         try {
             $stmt = $db->prepare($query);
@@ -121,13 +118,13 @@ abstract class PdoQuery
     /**
      * Fetch All
      *
-     * @param PDO $db    PDO instance
+     * @param $db
      * @param string $query Query
      * @param array  $args  Arguments
      *
      * @return array
      */
-    protected function fetch(PDO $db, string $query, array $args = array()): array
+    protected function fetch($db, string $query, array $args = array()): array
     {
         $stmt = $this->prepareStatement($db, $query);
 

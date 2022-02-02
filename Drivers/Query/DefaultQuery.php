@@ -3,7 +3,6 @@
 namespace IndyDevGuy\MaintenanceBundle\Drivers\Query;
 
 use Doctrine\DBAL\Exception;
-use PDO;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ObjectManager;
 
