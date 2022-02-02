@@ -62,10 +62,8 @@ abstract class PdoQuery
 
     /**
      * Initialize pdo connection
-     *
-     * @return PDO
      */
-    abstract function initDb(): PDO;
+    abstract function initDb();
 
     /**
      * Execute sql

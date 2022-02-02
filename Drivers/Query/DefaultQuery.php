@@ -28,7 +28,7 @@ class DefaultQuery extends PdoQuery
     /**
      * {@inheritdoc}
      */
-    public function initDb():PDO
+    public function initDb()
     {
         if (null === $this->db) {
             $db = $this->em->getConnection();
