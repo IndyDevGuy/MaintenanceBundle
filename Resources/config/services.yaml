@@ -24,9 +24,11 @@ services:
       - { name: kernel.event_listener, event: kernel.request }
       - { name: kernel.event_listener, event: kernel.response }
     arguments:
+      - '@security.authorization_checker'
       - '@idg_maintenance.driver.factory'
       - "%idg_maintenance.authorized.path%"
       - "%idg_maintenance.authorized.host%"
+      - "%idg_maintenance.authorized.roles%"
       - "%idg_maintenance.authorized.ips%"
       - "%idg_maintenance.authorized.query%"
       - "%idg_maintenance.authorized.cookie%"

@@ -32,6 +32,7 @@ class IDGMaintenanceExtension extends Extension
 
         $container->setParameter('idg_maintenance.authorized.path', $config['authorized']['path']);
         $container->setParameter('idg_maintenance.authorized.host', $config['authorized']['host']);
+        $container->setParameter('idg_maintenance.authorized.roles', $config['authorized']['roles']);
         $container->setParameter('idg_maintenance.authorized.ips', $config['authorized']['ips']);
         $container->setParameter('idg_maintenance.authorized.query', $config['authorized']['query']);
         $container->setParameter('idg_maintenance.authorized.cookie', $config['authorized']['cookie']);

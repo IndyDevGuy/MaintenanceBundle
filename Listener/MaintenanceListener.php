@@ -9,9 +9,15 @@ use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MaintenanceListener
 {
+    /**
+     * @var AuthorizationCheckerInterface $authorizationChecker
+     */
+    protected AuthorizationCheckerInterface $authorizationChecker;
+
     /**
      * Service driver factory
      *
@@ -40,6 +46,11 @@ class MaintenanceListener
      * @var array|null
      */
     protected ?array $ips;
+
+    /**
+     * @var array|null
+     */
+    protected ?array $roles;
 
     /**
      * @var array|null
@@ -95,9 +106,11 @@ class MaintenanceListener
      * it if at least one of the provided arguments is not empty and matches the
      *  incoming request.
      *
+     * @param AuthorizationCheckerInterface $authorizationChecker
      * @param DriverFactory $driverFactory The driver factory
      * @param string|null $path A regex for the path
      * @param string|null $host A regex for the host
+     * @param array $roles
      * @param array|null $ips The list of IP addresses
      * @param array $query Query arguments
      * @param array $cookie Cookies
@@ -109,9 +122,11 @@ class MaintenanceListener
      * @param bool $debug
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorizationChecker,
         DriverFactory $driverFactory,
         string $path = null,
         string $host = null,
+        array $roles = array(),
         array $ips = null,
         array $query = array(),
         array $cookie = array(),
@@ -122,9 +137,11 @@ class MaintenanceListener
         string $http_exception_message = null,
         bool $debug = false
     ) {
+        $this->authorizationChecker = $authorizationChecker;
         $this->driverFactory = $driverFactory;
         $this->path = $path;
         $this->host = $host;
+        $this->roles = $roles;
         $this->ips = $ips;
         $this->query = $query;
         $this->cookie = $cookie;
@@ -183,6 +200,10 @@ class MaintenanceListener
             return;
         }
 
+        if (count((array) $this->roles) !== 0 && $this->checkRoles($this->roles)) {
+            return;
+        }
+
         if (count((array) $this->ips) !== 0 && $this->checkIps($request->getClientIp(), $this->ips)) {
             return;
         }
@@ -213,6 +234,16 @@ class MaintenanceListener
             $response = $event->getResponse();
             $response->setStatusCode($this->http_code, $this->http_status);
         }
+    }
+
+    protected function checkRoles(array $roles):bool
+    {
+        foreach ($roles as $role) {
+            if ($this->authorizationChecker->isGranted($role)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
