@@ -17,7 +17,7 @@ use Symfony\Component\Console\Question\Question;
 class DriverLockCommand extends Command
 {
     // the name of the command (the part after "bin/console")
-    protected static $defaultName = 'idg:maintenance:lock';
+    protected static $defaultName = 'idg_maintenance:lock';
     protected static $defaultDescription = 'Activates Maintenance Mode for a specified time (ttl).';
     protected ?int $ttl;
 

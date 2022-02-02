@@ -11,7 +11,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class DriverUnlockCommand extends Command
 {
-    protected static $defaultName = 'idg:maintenance:unlock';
+    protected static $defaultName = 'idg_maintenance:unlock';
     protected static $defaultDescription = 'Disables Maintenance Mode.';
     private DriverFactory $driverFactory;
 
