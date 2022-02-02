@@ -13,10 +13,6 @@ class DriverUnlockCommand extends Command
 {
     protected static $defaultName = 'idg_maintenance:unlock';
     protected static $defaultDescription = 'Disables Maintenance Mode.';
-    protected static string $defaultHelp = <<<EOT
-                You can disable maintenance mode without a warning message or interaction with:
-                <info>%command.full_name% --no-interaction</info>
-            EOT;
     private DriverFactory $driverFactory;
 
     public function __construct(DriverFactory $driverFactory)
@@ -25,33 +21,27 @@ class DriverUnlockCommand extends Command
         $this->driverFactory = $driverFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure():void
     {
         $this
-            ->setName(self::$defaultName)
-            ->setDescription(self::$defaultDescription)
-            ->setHelp(self::$defaultHelp);
+            ->setName('idg_maintenance:unlock')
+            ->setDescription('Disables Maintenance Mode.');
     }
 
     /**
-     * {@inheritdoc}
      * @throws ErrorException
      */
     protected function execute(InputInterface $input, OutputInterface $output):int
     {
         if (!$this->confirmUnlock($input, $output)) {
-            return Command::SUCCESS;
+            return 1;
         }
 
         $driver = $this->driverFactory->getDriver();
-
         $unlockMessage = $driver->getMessageUnlock($driver->unlock());
-
         $output->writeln('<info>'.$unlockMessage.'</info>');
-        return Command::SUCCESS;
+
+        return 0;
     }
 
     /**

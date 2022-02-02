@@ -19,14 +19,6 @@ class DriverLockCommand extends Command
     // the name of the command (the part after "bin/console")
     protected static $defaultName = 'idg_maintenance:lock';
     protected static $defaultDescription = 'Activates Maintenance Mode for a specified time (ttl).';
-    protected static string $defaultHelp = <<<EOT
-                You can optionally change the time to life from the configuration, does not work with file or shm driver. Time is in seconds.
-               <info>%command.full_name% 3600</info>
-                You can enable maintenance mode without a warning message or interaction with:
-                <info>%command.full_name% --no-interaction</info>
-                Or
-                <info>%command.full_name% 3600 -n</info>
-            EOT;
     protected ?int $ttl;
 
     private DriverFactory $driverFactory;
@@ -37,20 +29,15 @@ class DriverLockCommand extends Command
         $this->driverFactory = $driverFactory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure():void
     {
         $this
-            ->setName($this::$defaultName)
-            ->setDescription($this::$defaultDescription)
-            ->addArgument('ttl', InputArgument::OPTIONAL, 'Overwrite time to life from the configuration, does not work with file or shm driver. Time is in seconds.')
-            ->setHelp($this::$defaultHelp);
+            ->setName('idg_maintenance:lock')
+            ->setDescription('Activates Maintenance Mode for a specified time (ttl).')
+            ->addArgument('ttl', InputArgument::OPTIONAL, 'Overwrite time to life from the configuration, does not work with file or shm driver. Time is in seconds.');
     }
 
     /**
-     * {@inheritdoc}
      * @throws ErrorException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -60,7 +47,7 @@ class DriverLockCommand extends Command
         if ($input->isInteractive()) {
             if (!$this->askConfirmation('WARNING! Are you sure you wish to continue? (y/n)', $input, $output)) {
                 $output->writeln('<error>Maintenance cancelled!</error>');
-                return Command::SUCCESS;
+                return 1;
             }
         } elseif (null !== $input->getArgument('ttl')) {
             $this->ttl = $input->getArgument('ttl');
@@ -74,11 +61,10 @@ class DriverLockCommand extends Command
         }
 
         $output->writeln('<info>'.$driver->getMessageLock($driver->lock()).'</info>');
-        return Command::SUCCESS;
+        return 0;
     }
 
     /**
-     * {@inheritdoc}
      * @throws ErrorException
      */
     protected function interact(InputInterface $input, OutputInterface $output)
