@@ -74,18 +74,18 @@ The ttl (time to life) option is optional everywhere, it is used to indicate the
 
 There are two commands to enable/disable maintenance mode:
 
-    idg:maintenance:lock [--set-ttl]
+    idg_maintenance:lock [--set-ttl]
 
 This command will enable maintenance mode according to your configuration. You can pass the maintenance mode time to life in a parameter, ``this does not with file driver``.
 
-    idg:maintenance:unlock
+    idg_maintenance:unlock
 
 This command will disable maintenance mode.
 
 You can enable/disable maintenance mode without a warning message and interaction with:
 
-    idg:maintenance:lock --no-interaction
-    idg:maintenance:unlock --no-interaction
+    idg_maintenance:lock --no-interaction
+    idg_maintenance:unlock --no-interaction
 
 Or (with the optional ttl overwriting)
 
