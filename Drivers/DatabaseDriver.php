@@ -77,7 +77,8 @@ class DatabaseDriver extends AbstractDriver implements DriverTTLInterface
                 $ttl = $this->options['ttl'];
                 $ttl = $now->modify(sprintf('+%s seconds', $ttl))->format('Y-m-d H:i:s');
             }
-            $status = $this->pdoDriver->insertQuery($ttl, $db);
+            $now = new DateTime('now');
+            $status = $this->pdoDriver->insertQuery($ttl, $now->format('Y-m-d H:i:s'), $db);
         } catch (Exception $e) {
             $status = false;
         }
@@ -104,7 +105,7 @@ class DatabaseDriver extends AbstractDriver implements DriverTTLInterface
     /**
      * @throws Exception
      */
-    public function getTtlDate(): ?DateTime
+    public function getDates(): ?array
     {
         $db = $this->pdoDriver->initDb();
         $data = $this->pdoDriver->selectQuery($db);
@@ -112,7 +113,7 @@ class DatabaseDriver extends AbstractDriver implements DriverTTLInterface
             return null;
         }
         if (null !== $data[0]['ttl']) {
-            return new DateTime($data[0]['ttl']);
+            return $data[0];
         }
         return null;
     }

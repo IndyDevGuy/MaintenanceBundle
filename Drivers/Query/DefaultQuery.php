@@ -47,14 +47,14 @@ class DefaultQuery extends PdoQuery
         $type = $this->em->getConnection()->getDatabasePlatform()->getName() != 'mysql' ? 'timestamp' : 'datetime';
 
         $this->db->exec(
-            sprintf('CREATE TABLE IF NOT EXISTS %s (ttl %s DEFAULT NULL)', self::NAME_TABLE, $type)
+            sprintf('CREATE TABLE IF NOT EXISTS %s (ttl %s DEFAULT NULL, start %s DEFAULT NULL)', self::NAME_TABLE, $type, $type)
         );
     }
 
     /**
      * {@inheritdoc}
      */
-    public function deleteQuery($db)
+    public function deleteQuery($db): bool
     {
         return $this->exec($db, sprintf('DELETE FROM %s', self::NAME_TABLE));
     }
@@ -62,20 +62,23 @@ class DefaultQuery extends PdoQuery
     /**
      * {@inheritdoc}
      */
-    public function selectQuery($db)
+    public function selectQuery($db): array
     {
-        return $this->fetch($db, sprintf('SELECT ttl FROM %s', self::NAME_TABLE));
+        return $this->fetch($db, sprintf('SELECT * FROM %s', self::NAME_TABLE));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function insertQuery($ttl, $db)
+    public function insertQuery($ttl, $start, $db): bool
     {
         return $this->exec(
-            $db, sprintf('INSERT INTO %s (ttl) VALUES (:ttl)',
+            $db, sprintf('INSERT INTO %s (ttl, start) VALUES (:ttl, :start)',
             self::NAME_TABLE),
-            array(':ttl' => $ttl)
+            array(
+                ':ttl' => $ttl,
+                ':start' => $start,
+            )
         );
     }
 }
